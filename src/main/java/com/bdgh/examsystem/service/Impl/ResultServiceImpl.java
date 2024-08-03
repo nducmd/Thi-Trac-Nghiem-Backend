@@ -1,9 +1,8 @@
 package com.bdgh.examsystem.service.Impl;
 
-import com.bdgh.examsystem.Exception.NoContentException;
-import com.bdgh.examsystem.Exception.NotFoundException;
+import com.bdgh.examsystem.exception.NoContentException;
+import com.bdgh.examsystem.exception.NotFoundException;
 import com.bdgh.examsystem.dto.Exam.ExamDetailsDto;
-import com.bdgh.examsystem.dto.Question.QuestionDetailsDto;
 import com.bdgh.examsystem.dto.Question.QuestionSummaryDto;
 import com.bdgh.examsystem.dto.Result.ResultDetailsDto;
 import com.bdgh.examsystem.dto.Result.ResultSummaryDto;
@@ -20,7 +19,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class ResultServiceImpl implements ResultService {
@@ -35,8 +33,9 @@ public class ResultServiceImpl implements ResultService {
     private ConvertToDtoServiceImpl convertToDtoService;
     @Override
     public ResultDetailsDto editResult(Long id, ResultDetailsDto resultDetailsDto) {
-        Result result = resultRepository.findById(id).orElse(null);
-        if(result == null) return null;
+        Result result = resultRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Không tồn tại bài làm"));
+
         Student student = result.getStudent();
         Exam exam = result.getExam();
         int socauhoi = exam.getQuestionList().size();
@@ -61,7 +60,7 @@ public class ResultServiceImpl implements ResultService {
     @Override
     public ResultDetailsDto createResult(ResultDetailsDto resultDetailsDto) {
         Student student = studentRepository.findById(resultDetailsDto.getStudent().getId()).orElse(null);
-        if(student == null){
+        if(student == null) {
             throw new NotFoundException("Nộp bài không thành công do không tồn tại sinh viên");
         }
         Exam exam = examRepository.findById(resultDetailsDto.getExam().getId()).orElse(null);
@@ -91,21 +90,22 @@ public class ResultServiceImpl implements ResultService {
     @Override
     public List<ResultSummaryDto> findAllResult() {
         List<Result> resultList = resultRepository.findAll();
+        if (resultList.isEmpty()) throw new NoContentException("Không có kết quả làm bài nào");
         return convertToDtoService.toResultSummaryDtoList(resultList);
     }
 
     @Override
     public ResultDetailsDto findById(Long id) {
-        Result result = resultRepository.findById(id).orElse(null);
-        if(result == null){
-            return null;
-        }
+        Result result = resultRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Không tồn tại bài làm"));
         return convertToDtoService.toResultDetailsDto(result);
 
     }
 
     @Override
     public void deleteResultById(Long id) {
+        Result result = resultRepository.findById(id).orElse(null);
+        if (result == null) return;
         resultRepository.deleteById(id);
     }
 
@@ -146,12 +146,14 @@ public class ResultServiceImpl implements ResultService {
     @Override
     public List<ResultSummaryDto> getResultsByExamId(Long examId) {
         List<Result> results = resultRepository.findByExamId(examId);
+        if (results.isEmpty()) throw new NoContentException("Không tìm thấy bài làm nào cho bài thi: " + examId);
         return convertToDtoService.toResultSummaryDtoList(results);
     }
 
     @Override
     public List<ResultSummaryDto> getResultsByStudentId(Long studentId) {
         List<Result> results = resultRepository.findByStudentId(studentId);
+        if (results.isEmpty()) throw new NoContentException("Không tìm thấy kết quả nào của sinh viên có id: " + studentId);
         return convertToDtoService.toResultSummaryDtoList(results);
     }
 }

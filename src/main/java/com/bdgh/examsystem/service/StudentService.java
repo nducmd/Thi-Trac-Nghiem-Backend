@@ -1,6 +1,5 @@
 package com.bdgh.examsystem.service;
 
-import com.bdgh.examsystem.dto.Result.ResultDetailsDto;
 import com.bdgh.examsystem.dto.Student.StudentDetailsDto;
 import com.bdgh.examsystem.dto.Student.StudentSummaryDto;
 import com.bdgh.examsystem.entity.Student;

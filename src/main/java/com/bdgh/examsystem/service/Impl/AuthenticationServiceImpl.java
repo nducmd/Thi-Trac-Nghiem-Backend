@@ -1,13 +1,14 @@
 package com.bdgh.examsystem.service.Impl;
 
 import com.bdgh.examsystem.config.JwtService;
-import com.bdgh.examsystem.dto.AuthenticationRequest;
-import com.bdgh.examsystem.dto.RegisterRequest;
+import com.bdgh.examsystem.dto.Auth.AuthenticationRequest;
+import com.bdgh.examsystem.dto.Auth.RegisterRequest;
 import com.bdgh.examsystem.entity.Role;
 import com.bdgh.examsystem.entity.Student;
 import com.bdgh.examsystem.entity.Teacher;
 import com.bdgh.examsystem.entity.User;
-import com.bdgh.examsystem.dto.Token;
+import com.bdgh.examsystem.dto.Token.Token;
+import com.bdgh.examsystem.exception.AuthException;
 import com.bdgh.examsystem.repository.StudentRepository;
 import com.bdgh.examsystem.repository.TeacherRepository;
 import com.bdgh.examsystem.repository.UserRepository;
@@ -26,6 +27,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class AuthenticationServiceImpl implements AuthenticationService {
+
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
@@ -40,33 +42,30 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     public Token register(RegisterRequest request) {
         Optional<User> existingUser = userRepository.findByEmail(request.getEmail());
-        if (existingUser.isEmpty())
-        {
-            var user = User.builder()
-                    .email(request.getEmail())
-                    .password(passwordEncoder.encode(request.getPassword()))
-                    .role(request.getRole())
+        if (existingUser.isPresent()) throw new AuthException("Người dùng đã tồn tại");
+        User user = User.builder()
+                .email(request.getEmail())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .role(request.getRole())
+                .build();
+        userRepository.save(user);
+        User user1 = userService.findUserByEmail(request.getEmail());
+        if (request.getRole().equals(Role.TEACHER)) {
+            Teacher teacher = Teacher.builder()
+                    .ho(request.getHo())
+                    .ten(request.getTen())
+                    .user(user1)
                     .build();
-            userRepository.save(user);
-            User user1 = userService.findUserByEmail(request.getEmail());
-            if (request.getRole().equals(Role.TEACHER)) {
-                Teacher teacher = Teacher.builder()
-                        .ho(request.getHo())
-                        .ten(request.getTen())
-                        .user(user1)
-                        .build();
-                teacherRepository.save(teacher);
-            } else {
-                Student student = Student.builder()
-                        .ho(request.getHo())
-                        .ten(request.getTen())
-                        .user(user1)
-                        .build();
-                studentRepository.save(student);
-            }
-            return new Token(jwtService.generateToken(user), request.getRole().name());
+            teacherRepository.save(teacher);
+        } else {
+            Student student = Student.builder()
+                    .ho(request.getHo())
+                    .ten(request.getTen())
+                    .user(user1)
+                    .build();
+            studentRepository.save(student);
         }
-        return null;
+        return new Token(jwtService.generateToken(user), request.getRole().name());
     }
 
     public Token authenticate(AuthenticationRequest request) {
@@ -78,15 +77,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     )
             );
         } catch (BadCredentialsException e) {
-            // Xử lý ngoại lệ khi mật khẩu không đúng
-            return null;
+            throw new AuthException("Tài khoản, mật khẩu không đúng");
         }
-        var user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow();
+        User user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new AuthException("Người dùng không tồn tại"));
         String token = jwtService.generateToken(user);
-        if (token != null) {
-            return new Token(token, user.getRole().name());
-        }
-        return null;
+        return new Token(token, user.getRole().name());
     }
 }

@@ -1,5 +1,6 @@
 package com.bdgh.examsystem.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -17,7 +18,9 @@ import java.util.Map;
 import java.util.function.Function;
 @Service
 public class JwtService {
-    private static final String SECRET_KEY = "Rkt1rAPvDDrUlhrUjphyZmpWoH4VFtMAhaYjnqU2YUgSTUqCoZYkdTM7ZQzpawB+I06sMZMs+JW85H/xKr61qQ==";
+    @Value("${jwt.secret}")
+    private String SECRET_KEY;
+    
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
@@ -55,14 +58,7 @@ public class JwtService {
     private Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
     }
-    public boolean checkToken(String token) {
-        try {
-            Date date = extractExpiration(token);
-            return extractExpiration(token).before(new Date());
-        } catch (ExpiredJwtException exception) {
-            return true;
-        }
-    }
+
     private Claims extractAllClaims(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(getSigningKey())

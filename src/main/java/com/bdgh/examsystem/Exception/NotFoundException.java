@@ -1,4 +1,4 @@
-package com.bdgh.examsystem.Exception;
+package com.bdgh.examsystem.exception;
 
 public class NotFoundException extends RuntimeException{
     public NotFoundException(String string) {

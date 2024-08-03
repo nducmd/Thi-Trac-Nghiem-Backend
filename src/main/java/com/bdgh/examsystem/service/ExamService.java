@@ -11,10 +11,9 @@ import java.util.List;
 public interface ExamService {
     List<ExamSummaryDto> findALL();
     ExamDetailsDto findById(Long id);
-    ExamSummaryDto save(ExamDetailsDto examDetailsDTO);
+    ExamSummaryDto add(ExamDetailsDto examDetailsDTO);
+    ExamSummaryDto update(Long id, ExamDetailsDto examDetailsDTO);
     void deleteById(Long id);
-
     Page<ExamSummaryDto> filterExam(ExamType type, int page);
-
     ExamOverviewDto getOverview(Long id);
 }

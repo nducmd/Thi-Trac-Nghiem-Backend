@@ -1,11 +1,10 @@
 package com.bdgh.examsystem.service.Impl;
 
-import com.bdgh.examsystem.Exception.NoContentException;
-import com.bdgh.examsystem.Exception.NotFoundException;
+import com.bdgh.examsystem.exception.NoContentException;
+import com.bdgh.examsystem.exception.NotFoundException;
 import com.bdgh.examsystem.dto.Student.StudentDetailsDto;
 import com.bdgh.examsystem.dto.Student.StudentSummaryDto;
 import com.bdgh.examsystem.entity.Student;
-import com.bdgh.examsystem.entity.Teacher;
 import com.bdgh.examsystem.repository.StudentRepository;
 import com.bdgh.examsystem.service.ConvertToDtoService;
 import com.bdgh.examsystem.service.StudentService;
@@ -14,8 +13,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDate;
 
 @Service
 public class StudentServiceImpl implements StudentService {
@@ -26,8 +23,8 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public StudentSummaryDto editStudent(Long id, StudentDetailsDto studentDetailsDto) {
-        Student student = studentRepository.findById(id).orElse(null);
-        if (student == null) throw new NotFoundException("Không có sinh viên với id: " + id);
+        Student student = studentRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Không có sinh viên với id: " + id));
         student.setHo(studentDetailsDto.getHo());
         student.setTen(studentDetailsDto.getTen());
         student.setDob(studentDetailsDto.getDob());
@@ -54,11 +51,14 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public void delete(Long id) {
+        Student student =  studentRepository.findById(id).orElse(null);
+        if (student == null) return;
         studentRepository.deleteById(id);
     }
 
     @Override
     public Student findById(Long id) {
-        return studentRepository.findById(id).orElse(null);
+        return studentRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Không có sinh viên với id: " + id));
     }
 }

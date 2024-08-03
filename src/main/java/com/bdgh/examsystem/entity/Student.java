@@ -2,6 +2,7 @@ package com.bdgh.examsystem.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
@@ -13,20 +14,21 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Student {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private String ho;
-    private String ten;
-    private String msv;
-    private String lop;
-    private double diemTrungBinh;
+    Long id;
+    String ho;
+    String ten;
+    String msv;
+    String lop;
+    double diemTrungBinh;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate dob;
+    LocalDate dob;
     @OneToOne
-    private User user;
+    User user;
     @OneToMany(mappedBy = "student", cascade = CascadeType.REMOVE)
-    private List<Result> results;
+    List<Result> results;
 }

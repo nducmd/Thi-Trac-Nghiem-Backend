@@ -1,15 +1,9 @@
 package com.bdgh.examsystem.dto.Teacher;
 
 import com.bdgh.examsystem.dto.Exam.ExamBasicDto;
-import com.bdgh.examsystem.dto.UserDto;
-import com.bdgh.examsystem.entity.Exam;
-import com.bdgh.examsystem.entity.User;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.bdgh.examsystem.dto.User.UserDto;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import java.util.List;
 
@@ -17,12 +11,13 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 @Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class TeacherDetailsDto {
-    private Long id;
-    private String ho;
-    private String ten;
-    private String title;
-    private String dob;
-    private UserDto userDto;
-    private List<ExamBasicDto> examList;
+    Long id;
+    String ho;
+    String ten;
+    String title;
+    String dob;
+    UserDto userDto;
+    List<ExamBasicDto> examList;
 }

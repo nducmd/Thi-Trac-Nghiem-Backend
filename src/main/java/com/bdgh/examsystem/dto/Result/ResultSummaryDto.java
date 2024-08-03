@@ -1,18 +1,17 @@
 package com.bdgh.examsystem.dto.Result;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class ResultSummaryDto {
-    private Long id;
-    private Long soCauDung;
-    private String batDau;
-    private String nopBai;
-    private String studentAnswer;
+    Long id;
+    Long soCauDung;
+    String batDau;
+    String nopBai;
+    String studentAnswer;
 }

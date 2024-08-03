@@ -1,31 +1,18 @@
 package com.bdgh.examsystem.service.Impl;
 
-import com.bdgh.examsystem.Exception.NotFoundException;
-import com.bdgh.examsystem.dto.UserDto;
-import com.bdgh.examsystem.entity.Role;
+import com.bdgh.examsystem.exception.NotFoundException;
 import com.bdgh.examsystem.entity.User;
 import com.bdgh.examsystem.repository.UserRepository;
 import com.bdgh.examsystem.service.GmailSenderService;
 import com.bdgh.examsystem.service.StudentService;
-import com.bdgh.examsystem.service.TeacherService;
 import com.bdgh.examsystem.service.UserService;
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.UUID;
-
-import static com.bdgh.examsystem.entity.Role.STUDENT;
-import static com.bdgh.examsystem.entity.Role.TEACHER;
 
 @Service
 public class UserServiceImpl implements UserService {

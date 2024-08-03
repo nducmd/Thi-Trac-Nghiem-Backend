@@ -4,17 +4,20 @@ import com.bdgh.examsystem.dto.Exam.ExamBasicDto;
 import com.bdgh.examsystem.dto.Exam.ExamDetailsDto;
 import com.bdgh.examsystem.dto.Exam.ExamSummaryDto;
 import lombok.*;
+import lombok.experimental.FieldDefaults;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class QuestionDetailsDto {
-    private Long id;
-    private String cauHoi;
-    private String dapAn1;
-    private String dapAn2;
-    private String dapAn3;
-    private String dapAn4;
-    private Long dapAnDung;
-    private ExamBasicDto exam;
+    Long id;
+    String cauHoi;
+    String dapAn1;
+    String dapAn2;
+    String dapAn3;
+    String dapAn4;
+    Long dapAnDung;
+    ExamBasicDto exam;
 }

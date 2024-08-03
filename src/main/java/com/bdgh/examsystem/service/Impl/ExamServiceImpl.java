@@ -1,7 +1,7 @@
 package com.bdgh.examsystem.service.Impl;
 
-import com.bdgh.examsystem.Exception.NoContentException;
-import com.bdgh.examsystem.Exception.NotFoundException;
+import com.bdgh.examsystem.exception.NoContentException;
+import com.bdgh.examsystem.exception.NotFoundException;
 import com.bdgh.examsystem.dto.Exam.ExamDetailsDto;
 import com.bdgh.examsystem.dto.Exam.ExamOverviewDto;
 import com.bdgh.examsystem.dto.Exam.ExamSummaryDto;
@@ -58,38 +58,25 @@ public class ExamServiceImpl implements ExamService {
 
     @Override
     public List<ExamSummaryDto> findALL() {
-        return convertToDtoService.toExamSummaryDtoList(examRepository.findAll());
+        List<Exam> examList = examRepository.findAll();
+        if (examList.isEmpty()) throw new NoContentException("Không tìm thấy kì thi nào");
+        return convertToDtoService.toExamSummaryDtoList(examList);
     }
-
-//    @Override
-//    public ExamDto findById(Long id) {
-//        Exam exam = examRepository.findById(id).orElse(null);
-//        if(exam == null){
-//            return null;
-//        }
-//        return convertToDtoService.convertExamToDto(exam);
-//    }
-
 
     @Override
     public ExamDetailsDto findById(Long id) {
-        Exam exam = examRepository.findById(id).orElse(null);
-        if(exam == null){
-            return null;
-        }
+        Exam exam = examRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Không có kì thi với id: " + id));
         return convertToDtoService.toExamDetailsDto(exam);
     }
 
 
 
     @Override
-    public ExamSummaryDto save(ExamDetailsDto examDetailsDTO) {
-        Teacher teacher = teacherRepository.findById(examDetailsDTO.getTeacher().getId()).orElse(null);
-        if(teacher == null){
-            return null;
-        }
+    public ExamSummaryDto add(ExamDetailsDto examDetailsDTO) {
+        Teacher teacher = teacherRepository.findById(examDetailsDTO.getTeacher().getId())
+                .orElseThrow(() -> new NotFoundException("Không thể thêm kì thi do giáo viên không tồn tại"));
         Exam exam = Exam.builder()
-                .id(examDetailsDTO.getId())
                 .ten(examDetailsDTO.getTen())
                 .gioKetThuc(examDetailsDTO.getGioKetThuc())
                 .ngayBatDau(examDetailsDTO.getNgayBatDau())
@@ -103,7 +90,28 @@ public class ExamServiceImpl implements ExamService {
     }
 
     @Override
+    public ExamSummaryDto update(Long id, ExamDetailsDto examDetailsDTO) {
+        Exam exam = examRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Không có kì thi với id: " + id));
+
+        Teacher teacher = teacherRepository.findById(examDetailsDTO.getTeacher().getId())
+                        .orElseThrow(() -> new NotFoundException("Không thể sửa kì thi do giáo viên không tồn tại"));
+
+        exam.setTen(examDetailsDTO.getTen());
+        exam.setGioKetThuc(examDetailsDTO.getGioKetThuc());
+        exam.setNgayBatDau(examDetailsDTO.getNgayBatDau());
+        exam.setGioBatDau(examDetailsDTO.getGioBatDau());
+        exam.setNgayKetThuc(examDetailsDTO.getNgayKetThuc());
+        exam.setExamType(examDetailsDTO.getExamType());
+        exam.setPassword(examDetailsDTO.getPassword());
+        exam.setTeacher(teacher);
+        return convertToDtoService.toExamSummaryDto(examRepository.save(exam));
+    }
+
+    @Override
     public void deleteById(Long id) {
+        Exam exam = examRepository.findById(id).orElse(null);
+        if (exam == null) return;
         examRepository.deleteById(id);
     }
 
@@ -114,16 +122,15 @@ public class ExamServiceImpl implements ExamService {
         if (examList.isEmpty()) throw new NoContentException("Không tìm thấy kì thi nào");
         return convertToDtoService.toExamSummaryDtoPage(examList);
     }
+
     @Autowired
     private ExamRepository examRepository;
     @Autowired
     private ResultRepository resultRepository;
     @Autowired
     private StudentRepository studentRepository;
-
     @Autowired
     private TeacherRepository teacherRepository;
-
     @Autowired
     private ConvertToDtoService convertToDtoService;
 

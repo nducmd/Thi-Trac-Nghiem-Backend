@@ -1,10 +1,8 @@
 package com.bdgh.examsystem.dto.Exam;
 
 import com.bdgh.examsystem.entity.ExamType;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
@@ -13,8 +11,9 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class ExamBasicDto {
-    private Long id;
-    private String ten;
-    private ExamType examType;
+    Long id;
+    String ten;
+    ExamType examType;
 }

@@ -1,10 +1,9 @@
 package com.bdgh.examsystem.service.Impl;
 
-import com.bdgh.examsystem.Exception.NoContentException;
-import com.bdgh.examsystem.Exception.NotFoundException;
+import com.bdgh.examsystem.exception.NoContentException;
+import com.bdgh.examsystem.exception.NotFoundException;
 import com.bdgh.examsystem.dto.Teacher.TeacherDetailsDto;
 import com.bdgh.examsystem.dto.Teacher.TeacherSummaryDto;
-import com.bdgh.examsystem.entity.Student;
 import com.bdgh.examsystem.entity.Teacher;
 import com.bdgh.examsystem.repository.TeacherRepository;
 import com.bdgh.examsystem.service.ConvertToDtoService;
@@ -23,6 +22,7 @@ public class TeacherServiceImpl implements TeacherService {
     private TeacherRepository teacherRepository;
     @Autowired
     private ConvertToDtoService convertToDtoService;
+
     @Override
     public TeacherSummaryDto editTeacher(Long id, TeacherDetailsDto teacherDetailsDto) {
         Teacher teacher = teacherRepository.findById(id).orElse(null);
@@ -44,11 +44,15 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Override
     public Teacher findById(Long id) {
-        return teacherRepository.findById(id).orElse(null);
+        return teacherRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Không tồn tại giáo viên với id: " + id));
     }
 
     @Override
     public void delete(Long id) {
+
+        Teacher teacher = teacherRepository.findById(id).orElse(null);
+        if (teacher == null) return;
         teacherRepository.deleteById(id);
     }
 }

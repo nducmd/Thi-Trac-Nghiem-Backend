@@ -1,12 +1,8 @@
 package com.bdgh.examsystem.dto.Student;
 
 import com.bdgh.examsystem.dto.Result.ResultSummaryDto;
-import com.bdgh.examsystem.dto.UserDto;
-import com.bdgh.examsystem.entity.Result;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -15,13 +11,14 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 @Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class StudentDetailsDto {
-    private Long id;
-    private String ho;
-    private String ten;
-    private String msv;
-    private String lop;
-    private double diemTrungBinh;
-    private LocalDate dob;
-    private List<ResultSummaryDto> results;
+    Long id;
+    String ho;
+    String ten;
+    String msv;
+    String lop;
+    double diemTrungBinh;
+    LocalDate dob;
+    List<ResultSummaryDto> results;
 }

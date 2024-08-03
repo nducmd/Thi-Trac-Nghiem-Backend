@@ -2,6 +2,7 @@ package com.bdgh.examsystem.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Entity
 @AllArgsConstructor
@@ -9,17 +10,18 @@ import lombok.*;
 @Getter
 @Setter
 @Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Question {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private String cauHoi;
-    private String dapAn1;
-    private String dapAn2;
-    private String dapAn3;
-    private String dapAn4;
-    private Long dapAnDung;
+    Long id;
+    String cauHoi;
+    String dapAn1;
+    String dapAn2;
+    String dapAn3;
+    String dapAn4;
+    Long dapAnDung;
     @ManyToOne
     @JoinColumn(name = "exam_id")
-    private Exam exam;
+    Exam exam;
 }

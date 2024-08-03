@@ -4,21 +4,20 @@ import com.bdgh.examsystem.dto.Exam.ExamBasicDto;
 import com.bdgh.examsystem.dto.Exam.ExamDetailsDto;
 import com.bdgh.examsystem.dto.Student.StudentBasicDto;
 import com.bdgh.examsystem.dto.Student.StudentDetailsDto;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class ResultDetailsDto {
-    private Long id;
-    private Long soCauDung;
-    private String batDau;
-    private String nopBai;
-    private String studentAnswer;
-    private ExamBasicDto exam;
-    private StudentBasicDto student;
+    Long id;
+    Long soCauDung;
+    String batDau;
+    String nopBai;
+    String studentAnswer;
+    ExamBasicDto exam;
+    StudentBasicDto student;
 }

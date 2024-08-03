@@ -8,7 +8,8 @@ import java.util.List;
 public interface QuestionService {
     List<QuestionDetailsDto> findALL();
     QuestionDetailsDto findById(Long id);
-    QuestionDetailsDto save(QuestionDetailsDto questionDetailsDto);
+    QuestionDetailsDto add(QuestionDetailsDto questionDetailsDto);
+    QuestionDetailsDto update(Long id, QuestionDetailsDto questionDetailsDto);
     void deleteById(Long id);
     List<QuestionSummaryDto> findAllByExamId(Long id);
 }

@@ -1,9 +1,9 @@
 package com.bdgh.examsystem.service;
 
 
-import com.bdgh.examsystem.dto.AuthenticationRequest;
-import com.bdgh.examsystem.dto.RegisterRequest;
-import com.bdgh.examsystem.dto.Token;
+import com.bdgh.examsystem.dto.Auth.AuthenticationRequest;
+import com.bdgh.examsystem.dto.Auth.RegisterRequest;
+import com.bdgh.examsystem.dto.Token.Token;
 
 public interface AuthenticationService {
     Token register(RegisterRequest request);

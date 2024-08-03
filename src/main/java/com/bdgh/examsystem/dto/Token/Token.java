@@ -1,16 +1,14 @@
-package com.bdgh.examsystem.entity;
-
+package com.bdgh.examsystem.dto.Token;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+@Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ResponseObject {
-    String status;
-    String message;
-    Object data;
+public class Token {
+    String token;
+    String role;
 }

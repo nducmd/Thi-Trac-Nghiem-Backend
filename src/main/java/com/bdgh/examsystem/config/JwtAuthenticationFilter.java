@@ -1,6 +1,7 @@
 package com.bdgh.examsystem.config;
 
 import com.bdgh.examsystem.entity.ResponseObject;
+import com.bdgh.examsystem.exception.AuthException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
@@ -39,7 +40,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             userEmail = jwtService.extractUsername(jwt);
             if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
-                if (jwtService.isTokenValid(jwt,userDetails)) {
+                if (jwtService.isTokenValid(jwt, userDetails)) {
                     UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                             userDetails,
                             null,
@@ -52,18 +53,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 }
             }
             filterChain.doFilter(request, response);
-        } catch (ExpiredJwtException e){
-            response.setContentType( "application/json; charset=utf-8" );
-            response.setStatus(HttpStatus.UNAUTHORIZED.value());
-            String json = new ObjectMapper().writeValueAsString(new ResponseObject("error", "Token đã hết hạn", null));
-            response.getWriter().write(json);
-            response.flushBuffer();
+        } catch (ExpiredJwtException e) {
+            handleException(response, "Token đã hết hạn", HttpStatus.UNAUTHORIZED);
         } catch (MalformedJwtException ex) {
-            response.setContentType( "application/json; charset=utf-8" );
-            response.setStatus(HttpStatus.FORBIDDEN.value());
-            String json = new ObjectMapper().writeValueAsString(new ResponseObject("error", "Token không hợp lệ", null));
-            response.getWriter().write(json);
-            response.flushBuffer();
+            handleException(response, "Token không hợp lệ", HttpStatus.FORBIDDEN);
         }
+    }
+
+    private void handleException(HttpServletResponse response, String message, HttpStatus status) throws IOException {
+        response.setContentType("application/json; charset=utf-8");
+        response.setStatus(status.value());
+        String json = new ObjectMapper().writeValueAsString(new ResponseObject("error", message, null));
+        response.getWriter().write(json);
+        response.flushBuffer();
     }
 }

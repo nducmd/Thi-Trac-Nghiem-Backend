@@ -1,11 +1,7 @@
 package com.bdgh.examsystem.dto.Teacher;
 
-import com.bdgh.examsystem.dto.Exam.ExamBasicDto;
-import com.bdgh.examsystem.dto.UserDto;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import java.util.List;
 
@@ -13,9 +9,10 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 @Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class TeacherBasicDto {
-    private Long id;
-    private String ho;
-    private String ten;
-    private String title;
+    Long id;
+    String ho;
+    String ten;
+    String title;
 }

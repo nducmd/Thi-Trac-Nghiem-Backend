@@ -1,19 +1,18 @@
 package com.bdgh.examsystem.dto.Exam;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class ExamOverviewDto {
-    private Long soCauHoi;
-    private Long soNguoiThamGia;
-    private Long soLuotLamBai;
-    private Double diemCaoNhat;
-    private Double diemThapNhat;
-    private Double diemTrungBinh;
+    Long soCauHoi;
+    Long soNguoiThamGia;
+    Long soLuotLamBai;
+    Double diemCaoNhat;
+    Double diemThapNhat;
+    Double diemTrungBinh;
 }

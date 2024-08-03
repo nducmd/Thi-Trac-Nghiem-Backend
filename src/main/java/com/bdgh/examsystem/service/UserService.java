@@ -1,11 +1,7 @@
 package com.bdgh.examsystem.service;
 
-import com.bdgh.examsystem.dto.AuthenticationRequest;
-import com.bdgh.examsystem.dto.Token;
-import com.bdgh.examsystem.dto.UserDto;
 import com.bdgh.examsystem.entity.User;
 import jakarta.mail.MessagingException;
-import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.Map;
 

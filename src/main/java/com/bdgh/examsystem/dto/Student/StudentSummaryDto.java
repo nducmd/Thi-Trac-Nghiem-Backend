@@ -1,10 +1,7 @@
 package com.bdgh.examsystem.dto.Student;
 
-import com.bdgh.examsystem.dto.UserDto;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
 
@@ -12,12 +9,13 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Data
 @Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class StudentSummaryDto {
-    private Long id;
-    private String ho;
-    private String ten;
-    private String msv;
-    private String lop;
-    private double diemTrungBinh;
-    private LocalDate dob;
+    Long id;
+    String ho;
+    String ten;
+    String msv;
+    String lop;
+    double diemTrungBinh;
+    LocalDate dob;
 }

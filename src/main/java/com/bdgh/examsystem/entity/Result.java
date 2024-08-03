@@ -2,6 +2,7 @@ package com.bdgh.examsystem.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -12,19 +13,19 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Result {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private Long soCauDung;
-    private LocalDateTime batDau;
-    private LocalDateTime nopBai;
-    private String studentAnswer;
+    Long id;
+    Long soCauDung;
+    LocalDateTime batDau;
+    LocalDateTime nopBai;
+    String studentAnswer;
     @ManyToOne
     @JoinColumn(name = "student_id")
-    private Student student;
+    Student student;
     @ManyToOne
     @JoinColumn(name = "exam_id")
-    private Exam exam;
-
+    Exam exam;
 }
