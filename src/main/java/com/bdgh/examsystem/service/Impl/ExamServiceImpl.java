@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -24,6 +25,8 @@ import java.util.Set;
 
 @Service
 public class ExamServiceImpl implements ExamService {
+
+
     @Override
     public ExamOverviewDto getOverview(Long id) {
         Exam exam = examRepository.findById(id).orElse(null);

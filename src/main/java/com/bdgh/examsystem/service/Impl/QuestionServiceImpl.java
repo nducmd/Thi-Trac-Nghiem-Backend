@@ -27,10 +27,6 @@ public class QuestionServiceImpl implements QuestionService {
     @Autowired
     private ConvertToDtoService convertToDtoService;
 
-    @Override
-    public List<QuestionDetailsDto> findALL() {
-        return convertToDtoService.convertQuestionListToDto(questionRepository.findAll());
-    }
 
     @Override
     public List<QuestionSummaryDto> findAllByExamId(Long id) {

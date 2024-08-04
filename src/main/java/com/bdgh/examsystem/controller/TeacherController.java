@@ -26,6 +26,14 @@ public class TeacherController {
                     new ResponseObject("ok", "Lấy danh sách giáo viên thành công", summaryDtoPage)
             );
       }
+      @GetMapping("/myInfo")
+      ResponseEntity<ResponseObject> getMyInfo() {
+
+            TeacherDetailsDto teacherDetailsDto = teacherService.getMyInfo();
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ResponseObject("ok", "Lấy thông tin sách giáo viên thành công", teacherDetailsDto)
+            );
+      }
 
       @PutMapping("/{id}")
       ResponseEntity<ResponseObject> editTeacher(@RequestBody TeacherDetailsDto teacherDetailsDto,

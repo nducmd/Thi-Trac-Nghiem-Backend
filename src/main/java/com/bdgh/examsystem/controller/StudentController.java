@@ -49,13 +49,28 @@ public class StudentController {
                 new ResponseObject("ok", "Sửa thông tin sinh viên thành công", studentSummaryDto)
         );
     }
+    @GetMapping("/{id}")
+    ResponseEntity<ResponseObject> findStudent(@PathVariable Long id) {
+
+        StudentDetailsDto studentDetailsDto = studentService.findStudentById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject("ok", "Lấy thông tin sinh viên thành công", studentDetailsDto)
+        );
+    }
+    @GetMapping("/myInfo")
+    ResponseEntity<ResponseObject> getStudentInfo() {
+
+        StudentDetailsDto studentDetailsDto = studentService.getMyInfo();
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject("ok", "Lấy thông tin sinh viên thành công", studentDetailsDto)
+        );
+    }
     @DeleteMapping("/{id}")
     public ResponseEntity<ResponseObject> deleteStudent(@PathVariable("id") Long id) {
 
-        Student student = studentService.findById(id);
+        studentService.delete(id);
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject("ok", "Xoá sinh viên thành công", null)
         );
     }
-
 }

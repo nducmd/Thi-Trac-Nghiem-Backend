@@ -1,23 +1,30 @@
 package com.bdgh.examsystem.service.Impl;
 
+import com.bdgh.examsystem.entity.User;
 import com.bdgh.examsystem.exception.NoContentException;
 import com.bdgh.examsystem.exception.NotFoundException;
 import com.bdgh.examsystem.dto.Student.StudentDetailsDto;
 import com.bdgh.examsystem.dto.Student.StudentSummaryDto;
 import com.bdgh.examsystem.entity.Student;
 import com.bdgh.examsystem.repository.StudentRepository;
+import com.bdgh.examsystem.repository.UserRepository;
 import com.bdgh.examsystem.service.ConvertToDtoService;
 import com.bdgh.examsystem.service.StudentService;
+import com.bdgh.examsystem.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class StudentServiceImpl implements StudentService {
+
     @Autowired
     private StudentRepository studentRepository;
+    @Autowired
+    private UserRepository userRepository;
     @Autowired
     private ConvertToDtoService toDtoService;
 
@@ -57,8 +64,20 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public Student findById(Long id) {
-        return studentRepository.findById(id)
+    public StudentDetailsDto findStudentById(Long id) {
+        Student student = studentRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Không có sinh viên với id: " + id));
+        return toDtoService.toStudentDetailsDto(student);
+    }
+
+    @Override
+    public StudentDetailsDto getMyInfo() {
+        var context = SecurityContextHolder.getContext();
+        String email = context.getAuthentication().getName();
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new NotFoundException("Không tồn tại người dùng "));
+        Student student = studentRepository.findByUser(user)
+                .orElseThrow(() -> new NotFoundException("Không tồn tại sinh viên"));
+        return toDtoService.toStudentDetailsDto(student);
     }
 }

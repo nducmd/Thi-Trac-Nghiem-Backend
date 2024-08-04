@@ -27,13 +27,14 @@ import java.util.stream.Collectors;
 public class ConvertToDtoServiceImpl implements ConvertToDtoService {
 
     @Override
-    public TeacherDetailsDto convertTeacherToDto(Teacher teacher) {
+    public TeacherDetailsDto toTeacherDetailsDto(Teacher teacher) {
         TeacherDetailsDto teacherDetailsDto = TeacherDetailsDto.builder()
                 .id(teacher.getId())
                 .ho(teacher.getHo())
                 .ten(teacher.getTen())
                 .dob(teacher.getDob() != null ? teacher.getDob().toString() : "")
                 .title(teacher.getTitle())
+                .examList(toExamBasicDtoList(teacher.getExamList()))
                 .build();
         return teacherDetailsDto;
     }
@@ -98,34 +99,6 @@ public class ConvertToDtoServiceImpl implements ConvertToDtoService {
                 .collect(Collectors.toList());
     }
 
-    @Override
-    public ResultDetailsDto convertResultFromExamToDto(Result result) {
-        return null;
-    }
-
-    @Override
-    public ResultDetailsDto convertResultFromStudentToDto(Result result) {
-        return null;
-    }
-
-
-
-
-    @Override
-    public ExamDetailsDto convertExamToDto(Exam exam) {
-        ExamDetailsDto examDetailsDTO = new ExamDetailsDto();
-        examDetailsDTO.setId(exam.getId());
-        examDetailsDTO.setTen(exam.getTen());
-        examDetailsDTO.setNgayBatDau(exam.getNgayBatDau());
-        examDetailsDTO.setGioBatDau(exam.getGioBatDau());
-        examDetailsDTO.setNgayKetThuc(exam.getNgayKetThuc());
-        examDetailsDTO.setGioKetThuc(exam.getGioKetThuc());
-        examDetailsDTO.setPassword(exam.getPassword());
-        examDetailsDTO.setExamType(exam.getExamType());
-        examDetailsDTO.setTeacher(toTeacherBasicDto(exam.getTeacher()));
-        return examDetailsDTO;
-    }
-
 
     @Override
     public ExamDetailsDto toExamDetailsDto(Exam exam) {
@@ -172,6 +145,13 @@ public class ConvertToDtoServiceImpl implements ConvertToDtoService {
     public List<ExamSummaryDto> toExamSummaryDtoList(List<Exam> examList) {
         return examList.stream()
                 .map(this::toExamSummaryDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ExamBasicDto> toExamBasicDtoList(List<Exam> examList) {
+        return examList.stream()
+                .map(this::toExamBasicDto)
                 .collect(Collectors.toList());
     }
 

@@ -19,11 +19,11 @@ import org.springframework.data.domain.Page;
 import java.util.List;
 
 public interface ConvertToDtoService {
-    ExamDetailsDto convertExamToDto(Exam exam);
     ExamDetailsDto toExamDetailsDto(Exam exam);
     ExamBasicDto toExamBasicDto(Exam exam);
     ExamSummaryDto toExamSummaryDto(Exam exam);
     List<ExamSummaryDto> toExamSummaryDtoList(List<Exam> examList);
+    List<ExamBasicDto> toExamBasicDtoList(List<Exam> examList);
     Page<ExamSummaryDto> toExamSummaryDtoPage(Page<Exam> examPage);
 
     QuestionDetailsDto convertQuestionToDto(Question question);
@@ -31,7 +31,7 @@ public interface ConvertToDtoService {
     QuestionSummaryDto toQuestionSummaryDto(Question question);
     List<QuestionSummaryDto> toQuestionSummaryDtoList(List<Question> questionList);
 
-    TeacherDetailsDto convertTeacherToDto(Teacher teacher);
+    TeacherDetailsDto toTeacherDetailsDto(Teacher teacher);
     TeacherSummaryDto toTeacherSummaryDto(Teacher teacher);
     TeacherBasicDto toTeacherBasicDto(Teacher teacher);
     Page<TeacherSummaryDto> toTeacherSummaryPage(Page<Teacher> teacherPage);
@@ -40,9 +40,6 @@ public interface ConvertToDtoService {
     ResultDetailsDto toResultDetailsDto(Result result);
     ResultSummaryDto toResultSummaryDto(Result result);
     List<ResultSummaryDto> toResultSummaryDtoList(List<Result> resultList);
-
-    ResultDetailsDto convertResultFromExamToDto(Result result);
-    ResultDetailsDto convertResultFromStudentToDto(Result result);
 
 
     StudentDetailsDto toStudentDetailsDto(Student student);

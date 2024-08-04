@@ -1,20 +1,19 @@
 package com.bdgh.examsystem.service.Impl;
 
+import com.bdgh.examsystem.entity.*;
 import com.bdgh.examsystem.exception.NoContentException;
 import com.bdgh.examsystem.exception.NotFoundException;
 import com.bdgh.examsystem.dto.Exam.ExamDetailsDto;
 import com.bdgh.examsystem.dto.Question.QuestionSummaryDto;
 import com.bdgh.examsystem.dto.Result.ResultDetailsDto;
 import com.bdgh.examsystem.dto.Result.ResultSummaryDto;
-import com.bdgh.examsystem.entity.Exam;
-import com.bdgh.examsystem.entity.Question;
-import com.bdgh.examsystem.entity.Result;
-import com.bdgh.examsystem.entity.Student;
 import com.bdgh.examsystem.repository.ExamRepository;
 import com.bdgh.examsystem.repository.ResultRepository;
 import com.bdgh.examsystem.repository.StudentRepository;
 import com.bdgh.examsystem.service.ResultService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -59,14 +58,15 @@ public class ResultServiceImpl implements ResultService {
     }
     @Override
     public ResultDetailsDto createResult(ResultDetailsDto resultDetailsDto) {
-        Student student = studentRepository.findById(resultDetailsDto.getStudent().getId()).orElse(null);
-        if(student == null) {
-            throw new NotFoundException("Nộp bài không thành công do không tồn tại sinh viên");
-        }
-        Exam exam = examRepository.findById(resultDetailsDto.getExam().getId()).orElse(null);
-        if (exam == null) {
-            throw new NotFoundException("Nộp bài không thành công do không tồn tại kì thi");
-        }
+        var context = SecurityContextHolder.getContext();
+        String email = context.getAuthentication().getName();
+
+        Student student = studentRepository.findById(resultDetailsDto.getStudent().getId())
+                .orElseThrow(() -> new NotFoundException("Nộp bài không thành công do không tồn tại sinh viên"));
+        if (!student.getUser().getEmail().equals(email)) throw new AccessDeniedException("");
+        Exam exam = examRepository.findById(resultDetailsDto.getExam().getId())
+                .orElseThrow(() -> new NotFoundException("Nộp bài không thành công do không tồn tại kì thi"));
+
         int socauhoi = exam.getQuestionList().size();
         while (resultDetailsDto.getStudentAnswer().length() < socauhoi) {
             resultDetailsDto.setStudentAnswer(resultDetailsDto.getStudentAnswer() + "F");

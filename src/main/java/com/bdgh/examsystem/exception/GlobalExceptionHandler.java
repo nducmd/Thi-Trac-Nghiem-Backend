@@ -2,9 +2,11 @@ package com.bdgh.examsystem.exception;
 
 import com.bdgh.examsystem.entity.ResponseObject;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -15,6 +17,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @ControllerAdvice
+@Slf4j
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = NoContentException.class)
@@ -75,10 +78,24 @@ public class GlobalExceptionHandler {
         );
     }
 
+    @ExceptionHandler(value = AccessDeniedException.class)
+    ResponseEntity<ResponseObject> handleException(AccessDeniedException exception) {
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject("error", "Người dùng không có quyền thực hiện", null)
+        );
+    }
+
     @ExceptionHandler(value = Exception.class)
-    ResponseEntity<ResponseObject> handleException(NoContentException exception) {
+    ResponseEntity<ResponseObject> handleException(Exception exception) {
+        logException(exception);
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject("error", "Lỗi không xác định", null)
         );
+    }
+    private void logException(Exception ex) {
+        log.error("Exception: {}. Error: {}. Cause: {}",
+                ex.getClass().getName(),
+                ex.getMessage(),
+                (ex.getCause() != null ? ex.getCause().getMessage() : "None"));
     }
 }

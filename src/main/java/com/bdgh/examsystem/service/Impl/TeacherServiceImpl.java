@@ -1,17 +1,20 @@
 package com.bdgh.examsystem.service.Impl;
 
+import com.bdgh.examsystem.entity.User;
 import com.bdgh.examsystem.exception.NoContentException;
 import com.bdgh.examsystem.exception.NotFoundException;
 import com.bdgh.examsystem.dto.Teacher.TeacherDetailsDto;
 import com.bdgh.examsystem.dto.Teacher.TeacherSummaryDto;
 import com.bdgh.examsystem.entity.Teacher;
 import com.bdgh.examsystem.repository.TeacherRepository;
+import com.bdgh.examsystem.repository.UserRepository;
 import com.bdgh.examsystem.service.ConvertToDtoService;
 import com.bdgh.examsystem.service.TeacherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -20,6 +23,8 @@ import java.time.LocalDate;
 public class TeacherServiceImpl implements TeacherService {
     @Autowired
     private TeacherRepository teacherRepository;
+    @Autowired
+    private UserRepository userRepository;
     @Autowired
     private ConvertToDtoService convertToDtoService;
 
@@ -50,9 +55,19 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Override
     public void delete(Long id) {
-
         Teacher teacher = teacherRepository.findById(id).orElse(null);
         if (teacher == null) return;
         teacherRepository.deleteById(id);
+    }
+
+    @Override
+    public TeacherDetailsDto getMyInfo() {
+        var context = SecurityContextHolder.getContext();
+        String email = context.getAuthentication().getName();
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new NotFoundException("Không tồn tại người dùng"));
+        Teacher teacher = teacherRepository.findByUser(user)
+                .orElseThrow(() -> new NotFoundException("Không tồn tại giáo viên"));
+        return convertToDtoService.toTeacherDetailsDto(teacher);
     }
 }
